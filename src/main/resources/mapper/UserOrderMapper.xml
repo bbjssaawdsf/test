@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.Mapper.UserOrderMapper">
+
+    <select id="selectuser" resultType="map">
+        SELECT commodity_id, SUM(number ) as order_count
+        FROM user_order
+        GROUP BY (commodity_id,orderid)
+        ORDER BY order_count DESC
+        LIMIT 8;
+
+
+    </select>
+</mapper>
