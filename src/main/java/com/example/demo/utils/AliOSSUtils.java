@@ -20,8 +20,8 @@ import java.util.UUID;
 public class AliOSSUtils {
 
     String endpoint = "https://oss-cn-beijing.aliyuncs.com";
-    String accessKeyId = "LTAI5tGiJpQANegi7vN1LZGo"/*System.getenv("ALIYUN_ACCESS_KEY_ID")*/;
-    String accessKeySecret = "GGrce47gYTpp7Wyb7q6fK20lMqoWsU"/*System.getenv("ALIYUN_ACCESS_KEY_SECRET")*/;
+    String accessKeyId = "========"/*System.getenv("ALIYUN_ACCESS_KEY_ID")*/;
+    String accessKeySecret = "==============="/*System.getenv("ALIYUN_ACCESS_KEY_SECRET")*/;
     String bucketName = "javaweb-s";
     /**
      * 实现上传图片到OSS
