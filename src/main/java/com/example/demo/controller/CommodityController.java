@@ -27,12 +27,18 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * <p>
- *  前端控制器
- * </p>
+ *
+ *
+ *
  *
  * @author author
  * @since 2024-06-14
+ *
+ * 商品控制器
+ * 包含增删查改
+ * 模糊查询
+ * 库存管理
+ *
  */
 @Api(tags="商品管理接口")
 @RestController
@@ -49,6 +55,14 @@ public class CommodityController {
     UserOrderServiceImpl userOrderService;
     @Autowired
     VarietyServiceImpl varietyService;
+
+
+    /*根据前端传的商品Dto数据,
+    把图片上传oss后把返回的路径
+    再用hutoll考培工具把Dto拷贝到po,给po
+    再将po类存到数据库中
+
+    * */
     @PostMapping("/save")
     @ApiOperation("新增商品接口")
     private Result saveCodi( CommodityDto dto) throws IOException {
@@ -71,6 +85,12 @@ public class CommodityController {
         commodityService.save(commodity);
         return Result.success(commodity);
     }
+    /*
+    *
+    * 根据用户账户删除表中对应字段的商品
+    *用mybatisplus中的Iservice接口提供的方法
+    *
+    * */
     @ApiOperation("删除商品接口")
     @PostMapping("/delete/{account}")
     public Result deleteCommodityById(@ApiParam("用户account") @PathVariable("account") String account) {
@@ -81,6 +101,15 @@ public class CommodityController {
         commodityService.removeById(account);
         return Result.success("成功");
     }
+
+    /*
+
+    * 根据一个list集合
+    * 遍历其中的字段
+    * 删除对应表中的字段
+    * 达到删除
+    * 用mybatisplus中的Iservice接口提供的方法
+    * */
     @ApiOperation("批量删除商品接口")
     @PostMapping("/deletes")
     public Result deleteCommodityByIds(@ApiParam("用户account") @RequestBody List<String> account) {
@@ -89,7 +118,12 @@ public class CommodityController {
         }
         return Result.success("成功");
     }
-
+/*
+*
+* 用iservice自带的方法完成根据商品编号的字段查询
+* 并返回查到的数据
+*
+* */
     @ApiOperation("根据商品编号查询商品接口")
     @PostMapping("/select/{account}")
     public Result queryUserById(@ApiParam("用户account") @PathVariable("account") String account) {
@@ -100,6 +134,16 @@ public class CommodityController {
         return Result.success(user);
 
     }
+
+    /*根据前端传的商品Dto数据,
+    把图片上传oss后把返回的路径
+    再用hutoll考培工具把Dto拷贝到po,给po
+    再将po类存到数据库中
+    用UpdateWrapper构造设置跟新条件
+    判断dto中所有字段是否为空
+    再用iservice中的update根据条件跟新数据
+
+    * */
     @ApiOperation("更改商品接口")
     @PostMapping("/change")
     public Result UpdateUser( CommodityDto dto) throws IOException {
@@ -143,6 +187,15 @@ public class CommodityController {
             return Result.error("更新失败");
         }
     }
+
+    /*
+    *
+    * 配置好page分页
+    * 调用自己写的service 层的bycommodity
+    * 把分页条件和商品名传进去查到满足条件的数据
+    * 用Result封装返回结果
+    *
+    * */
     @ApiOperation("分页模糊按commodityID查询接口")
     @GetMapping
             ("/Page")
@@ -159,6 +212,14 @@ public class CommodityController {
         commodities.forEach(System.out::println);
         return Result.success(commodities);
      }
+    /*
+     *
+     * 配置好page分页
+     * 调用自己写的service 层的bycommodity
+     * 把分页条件和商品名传进去查到满足条件的数据
+     * 用Result封装返回结果
+     *
+     * */
     @ApiOperation("分页模糊按commodity查询接口")
     @GetMapping("/Page2")
     public Result PageQuey2(@RequestParam int pageNO,@RequestParam int pageSize ,String account){
@@ -174,6 +235,10 @@ public class CommodityController {
         commodities.forEach(System.out::println);
         return Result.success(commodities);
     }
+
+    /*
+    * 分页查询改良
+    * */
     @ApiOperation("模糊查询商品接口")
     @PostMapping("/selectlike/{accpont}")
     public Result queryUserByname(@PathVariable("account") String account) {
@@ -184,6 +249,13 @@ public class CommodityController {
         return Result.success(user);
 
     }
+
+    /**
+    *
+     *
+     * 分页查询改良
+     * 返回指定数据给前端展示商品
+    * */
     @ApiOperation("返回指定数量的数据")
     @GetMapping("/nums")
     public Result getCommoditiesByLimit(@RequestParam(value = "limit") int limit,@RequestParam String commodity) {
@@ -194,6 +266,14 @@ public class CommodityController {
         return Result.success(commodities);
     }
 
+    /*
+    *
+    * 统计指定字段
+    * 模糊查询指定字段
+    * 空的话就是查全部
+    * 返回统计数
+    *
+    * */
         @ApiOperation("返回查询结果数量和总数接口")
     @GetMapping("/num")
     public Result num( String account) {
@@ -203,6 +283,13 @@ public class CommodityController {
         return Result.success(commodityService.count(queryWrapper));
     }
 
+    /*
+    *
+    * 用于商品购买
+    * 加同步函数解决线程安全问题
+    *
+    *
+    * */
     @ApiOperation("库存减接口")
     @GetMapping("/update")
     public  synchronized Result SellTicket1( @ApiParam("账户id") @RequestParam int commodityid , @RequestParam String account, @ApiParam("扣减数量") @RequestParam int number){

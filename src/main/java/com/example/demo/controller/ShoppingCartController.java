@@ -159,4 +159,17 @@ public class ShoppingCartController {
         List<ShoppingCart> commodities= resultPage.getRecords();
         return Result.success(commodities);
     }
+
+    @ApiOperation("购物车中是否已存在")
+    @GetMapping("/isExist")
+    public Result isExist(@RequestParam String account, @RequestParam String commodityId) {
+        int pageNO=0;
+
+        QueryWrapper<ShoppingCart> queryWrapper =new QueryWrapper<>();
+        queryWrapper.eq("commodity_id", commodityId).eq("account", account);
+        ShoppingCart shoppingCart=shoppingCartService.getOne(queryWrapper);
+      //  log.info(shoppingCart.to);
+        if (shoppingCart == null) return Result.error("购物车中已存在");
+        return Result.success();
+    }
 }
