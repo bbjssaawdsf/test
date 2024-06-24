@@ -26,9 +26,9 @@ public class SendSMS {
 
         com.aliyun.teaopenapi.models.Config config = new com.aliyun.teaopenapi.models.Config()
                 // 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_ID。
-                .setAccessKeyId("====")
+                .setAccessKeyId(System.getenv("ALIBABA_CLOUD_ACCESS_KEY_ID"))
                 // 必填，请确保代码运行环境设置了环境变量 ALIBABA_CLOUD_ACCESS_KEY_SECRET。
-                .setAccessKeySecret("====");
+                .setAccessKeySecret(System.getenv("ALIBABA_CLOUD_ACCESS_KEY_SECRET"));
         // Endpoint 请参考 https://api.aliyun.com/product/Dysmsapi
         config.endpoint = "dysmsapi.aliyuncs.com";
         return new Client(config);
